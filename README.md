@@ -12,6 +12,12 @@ About a year ago I started a livestream project for my local sports club. We wan
 ## vMix API
 This project uses the vMix API to interface the Raspberry Pi with vMix. More information about this API can be found [here](https://www.vmix.com/help19/index.htm?DeveloperAPI.html)
 
+## Credits
+This project would not be possible if it wasn't for the help, information and inspiration from the following people:
+- [Jan Jaap Elenbaas](https://www.linkedin.com/in/jjelenbaas/)
+- Rick Voskamp
+- [André Kager](https://www.linkedin.com/in/andrekager/)
+
 ## License
 Boost Software License 1.0 © [Remco van den Enden](https://github.com/remcoenden)
 
