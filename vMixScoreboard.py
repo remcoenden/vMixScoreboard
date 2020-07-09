@@ -8,7 +8,7 @@
 #####################################################################
 # Imports
 #####################################################################
-import urllib.request as request
+import urllib.request
 import time
 
 
@@ -36,19 +36,18 @@ SCOREBOARD_TIME_SPACER = "Time_spacer.Text"
 #####################################################################
 # HTML Colours
 #####################################################################
-RED = "red"
-WHITE = "white"
-BLACK = "black"
+INACTIVE = "red"
+ACTIVE = "white"
 
 
 #####################################################################
 # API Functions
 #####################################################################
 def setText(ip, id, name, value):
-    request.urlopen('http://' + str(ip) + '/API/?Function=SetText&Input=' + str(id) + '&SelectedName=' + str(name) + '&Value=' + str(value))
+    urllib.request.urlopen('http://' + str(ip) + '/API/?Function=SetText&Input=' + str(id) + '&SelectedName=' + str(name) + '&Value=' + str(value))
 
 def setTextColour(ip, id, name, value):
-    request.urlopen('http://' + str(ip) + '/API/?Function=SetTextColour&Input=' + str(id) + '&SelectedName=' + str(name) + '&Value=' + str(value))
+    urllib.request.urlopen('http://' + str(ip) + '/API/?Function=SetTextColour&Input=' + str(id) + '&SelectedName=' + str(name) + '&Value=' + str(value))
     
 #####################################################################
 # Main
@@ -75,16 +74,16 @@ def main():
         else:
             setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SECONDS, currentSeconds)
             setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_MINUTES, currentMinutes)
-            setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SECONDS, WHITE)
-            setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_MINUTES, WHITE)
-            setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SPACER, WHITE)
+            setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SECONDS, ACTIVE)
+            setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_MINUTES, ACTIVE)
+            setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SPACER, ACTIVE)
             oldSeconds = currentSeconds
             attempt = 0;
             
         if(attempt > 10):
-            setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SECONDS, RED)
-            setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_MINUTES, RED)
-            setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SPACER, RED)
+            setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SECONDS, INACTIVE)
+            setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_MINUTES, INACTIVE)
+            setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SPACER, INACTIVE)
         
         # Check if there is an update in the home score
         # If so, push updated score to vMix
