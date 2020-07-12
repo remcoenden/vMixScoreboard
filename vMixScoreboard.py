@@ -15,13 +15,12 @@ import time
 #####################################################################
 # IP-Addres
 #####################################################################
-IP_ADDRES = "192.168.2.13:8088"
-
+IP_ADDRES = "10.15.52.253:8088"
 
 #####################################################################
 # Title name defintions
 #####################################################################
-SCOREBOARD_ID = "545d3747-2b2f-4c7f-8af3-ef7c823226cb"
+SCOREBOARD_ID = "2f7cf9d9-d81d-404e-a67a-18268bb38d12"
 SCOREBORAD_HOME_NAME = "HomeName.Text"
 SCOREBOARD_GUEST_NAME = "GuestName.Text"
 
@@ -32,6 +31,10 @@ SCOREBOARD_TIME_SECONDS = "TimeSeconds.Text"
 SCOREBOARD_TIME_MINUTES = "TimeMinutes.Text"
 SCOREBOARD_TIME_SPACER = "Time_spacer.Text"
 
+#####################################################################
+# Global variables
+#####################################################################
+TIME_OUT = 3 #in seconds
 
 #####################################################################
 # HTML Colours
@@ -43,6 +46,16 @@ ACTIVE = "white"
 #####################################################################
 # API Functions
 #####################################################################
+def checkForConenction(ip):
+    req = urllib.request.Request('http://' + str(ip) + '/API')
+    while True:
+        try:
+            urllib.request.urlopen(req)
+            return
+        except urllib.error.URLError:
+             print('Connection has failed. Will try again in ' + str(TIME_OUT) + ' seconds.')
+             time.sleep(TIME_OUT)
+
 def setText(ip, id, name, value):
     urllib.request.urlopen('http://' + str(ip) + '/API/?Function=SetText&Input=' + str(id) + '&SelectedName=' + str(name) + '&Value=' + str(value))
 
@@ -58,7 +71,12 @@ def main():
     
     oldHomeScore = 0
     oldGuestScore = 0
-    while(True):
+    
+    # Test if API connection is possible
+    # If not, keep tring
+    checkForConenction(IP_ADDRES)
+    
+    while(True):        
         # Get current time
         # This should be replaced by something to read out
         # the information from the scoreboard
