@@ -9,6 +9,12 @@ With vMixScoreboard you will be able to pull data straight from your Anatec scor
 ## Background
 About a year ago I started a livestream project for my local sports club. We wanted to give everybody the opportunity to see our top class matches, even those that live across the country. One of the major graphics showing during the game is the live score. Since we did not want to update the score and time by hand, we started looking for an automated solution. We used to use the program [Scoreboard OCR](http://scoreboard-ocr.com/) but unfortunately for us they decided to ask absurd prices for their service, so back to the drawing board it was. With some inspiration from other clubs in our league we decided to make use of a Raspberry Pi, connected to the scoreboard to get out data in vMix.
 
+## Schematic design
+Below you can find the electrical schematic design to hook up the Raspberry Pi to the scoreboard. I have tested this design with a Raspberry Pi 4 and a PIC16F873 driving the scoreboard. I do not know if this schematics still works for defferent scoreboards driven by different microconroller, but the same basic principal should apply.
+Our goal is to permanenly mount the Raspberry Pi in the scoreboard, so we needed a way to turn it on and off on demand. The power switch should enable this. A small piece of software is needed to use this switch, but more about that later on (TODO: add software for power switch).
+
+![alt text](https://github.com/remcoenden/vMixScoreboard/blob/master/vMixScoreboard%20Schematic.png "Schematic design")
+
 ## vMix API
 This project uses the vMix API to interface the Raspberry Pi with vMix. More information about this API can be found [here](https://www.vmix.com/help19/index.htm?DeveloperAPI.html)
 
