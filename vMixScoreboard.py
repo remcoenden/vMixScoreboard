@@ -20,7 +20,7 @@ IP_ADDRES = "10.15.52.253:8088"
 #####################################################################
 # Title name definitions
 #####################################################################
-SCOREBOARD_ID = "2f7cf9d9-d81d-404e-a67a-18268bb38d12"
+SCOREBOARD_ID = "f1446fc4-ec48-47fb-bfaa-c04a272ef775"
 SCOREBORAD_HOME_NAME = "HomeName.Text"
 SCOREBOARD_GUEST_NAME = "GuestName.Text"
 

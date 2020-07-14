@@ -58,12 +58,19 @@ Finally there is the period update. This is indicated as follows
 
 Where the first line indicated the first period and the second line the second period.
 
-#### Flow diagram
-The next step is setting up a Python script so we can read the data coming from the PIC16F873 and extract the useful data from it. 
+#### Software flow
+The next step is setting up a Python script so we can read the data coming from the PIC16F873 and extract the useful data from it. The basic flow of the program is as follows:
+
+1. Read the UART data
+2. Determine what data has been send by looking at the first few characters
+3. Check is the data send is different from the previous data send. If the seconds change, the minutes most likely stay the same. So if the time updates from 24:59 to 24:58, only the seconds change. The same goes for updates regarding the score.
+4. Push the changed data to vMix via the API.
+
+For a more detailed description of the software I suggest looking at the file [vMixScoreboard.py](https://github.com/remcoenden/vMixScoreboard/blob/master/vMixScoreboard.py). I've commented the code as much as possible so the flow should be clear as water.  
 
 ---
 
-The power button works by shorting GPIO3 to GROUND, basicly exactly the same as the power button on your computer. This function is not included out of the box on your Raspberry Pi, so a small script has to be added in order for this to work. I have followed [this](https://howchoo.com/g/mwnlytk3zmm/how-to-add-a-power-button-to-your-raspberry-pi) tutorial from *howchoo* to add this function to the project.
+The power button works by shorting GPIO3 to GROUND, basically exactly the same as the power button on your computer. This function is not included out of the box on your Raspberry Pi, so a small script has to be added in order for this to work. I have followed [this](https://howchoo.com/g/mwnlytk3zmm/how-to-add-a-power-button-to-your-raspberry-pi) tutorial from *howchoo* to add this function to the project.
 
 ## vMix API
 This project uses the vMix API to interface the Raspberry Pi with vMix. More information about this API can be found [here](https://www.vmix.com/help19/index.htm?DeveloperAPI.html)
