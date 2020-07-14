@@ -21,43 +21,45 @@ Our goal is to permanently mount the Raspberry Pi in the scoreboard, so we neede
 The beauty of this design lays in the fact that no modification to the original scoreboard PCB is needed. Just solder the UART wire to the correct pin of the microcontroller, together with a GROUND connection and that’s it!
 
 ### Software overview
-The software for vMixScoreboard is relatively easy. The main program consists of two main features: reading data from the serial connection and pushing this data to vMix via the API. The flow of this program is given in the image below.
+The software for vMixScoreboard is relatively easy. The main program consists of two main features: reading data from the serial connection and pushing this data to vMix via the API. 
 
-TODO: Add Flow Diagram
+The UART string coming from the PIC16F873 is of variable length and can have three main states, one for updating the time, one for updating the score and finally one for updating the period. Each of these states in indicated with a different header. Below you can find an example showing each state.
 
-The UART readout gives a string containing 54 unique characters, each representing a different digit for the scoreboard. Since this self-made protocol is used for various scoreboards with each various feature there will the characters that are of no use for us. Below you can find a list of all 54 characters and their representation.
+#### Time update
+An time update is given as follows
 
-|     Code in the frame | Meaning                                |    |     Code in the frame | Meaning                                |
-|----------------------:|:---------------------------------------|----|----------------------:|:---------------------------------------|
-|                     0 | START CODE = "F8"                      |    |                    27 | HOME: Individual fouls player 6        |
-|                     1 | SPORT CODE = "33"                      |    |                    28 | HOME: Individual fouls player 7        |
-|                     2 | "20"                                   |    |                    29 | HOME: Individual fouls player 8        |
-|                     3 | Ball possession                        |    |                    30 | HOME: Individual fouls player 9        |
-|                 **4** | **Timer (digit 1)**                    |    |                    31 | HOME: Individual fouls player 10       |
-|                 **5** | **Timer (digit 2)**                    |    |                    32 | HOME: Individual fouls player 11       |
-|                 **6** | **Timer (digit 3)**                    |    |                    33 | HOME: Individual fouls player 12       |
-|                 **7** | **Timer (digit 4)**                    |    |                    34 | GUEST: Individual fouls player 1       |
-|                 **8** | **HOME: Points (digit 1)**             |    |                    35 | GUEST: Individual fouls player 2       |
-|                 **9** | **HOME: Points (digit 2)**             |    |                    36 | GUEST: Individual fouls player 3       |
-|                    10 | HOME: Points (digit 3)                 |    |                    37 | GUEST: Individual fouls player 4       |
-|                **11** | **GUEST: Points (digit 1)**            |    |                    38 | GUEST: Individual fouls player 5       |
-|                **12** | **GUEST: Points (digit 2)**            |    |                    39 | GUEST: Individual fouls player 6       |
-|                    13 | GUEST: Points (digit 3)                |    |                    40 | GUEST: Individual fouls player 7       |
-|                    14 | Period                                 |    |                    41 | GUEST: Individual fouls player 8       |
-|                    15 | HOME: Team fouls                       |    |                    42 | GUEST: Individual fouls player 9       |
-|                    16 | GUEST: Team fouls                      |    |                    43 | GUEST: Individual fouls player 10      |
-|                    17 | HOME: Number of time-outs              |    |                    44 | GUEST: Individual fouls player 11      |
-|                    18 | GUEST: Number of tie-outs              |    |                    45 | GUEST: Individual fouls player 12      |
-|                    19 | Horn                                   |    |                    46 | Time-out timer (digit 2)               |
-|                **20** | **Timer start/stop**                   |    |                    47 | Time-out timer (digit 3)               |
-|                    21 | Time-out timer (digit 1)               |    |                    48 | 24" Timer (digit 1)                    |
-|                    22 | HOME: Individual fouls player 1        |    |                    49 | 24" Timer (digit 2)                    |
-|                    23 | HOME: Individual fouls player 2        |    |                    50 | 24" Horn                               |
-|                    24 | HOME: Individual fouls player 3        |    |                    51 | 24" Timer start/stop                   |
-|                    25 | HOME: Individual fouls player 4        |    |                    52 | 24" display                            |
-|                    26 | HOME: Individual fouls player 5        |    |                    53 | "0D"                                   |
+```
+??RD! 2500\n
+??RD! 2459\n
+??RD! 2458\n
+```
 
-The digits printed with **bold** are the ones that are interesting for us. These tell us exactly what the scoreboard displays regarding the time and score. The Python script will extract these precise digits from the total string so we can push them to vMix.
+Where the initial time of *25:00* counts down with one second.
+
+#### Score update
+An score update is given as follows
+
+```
+??RD#  0  0 \n
+??RD#  1  0 \n
+??RD#  1  1 \n
+??RD# 10  10\n
+```
+
+Here to initial score starts at 0 - 0 (HOME - GUEST). After that +1 is added for HOME, the same is done for GUEST. Once the score reaches double digits the position of the scores within the string changes a bit. Please note that the score for HOME and GUEST are always separated by two `spaces`.
+
+#### Period update
+Finally there is the period update. This is indicated as follows
+
+```
+??RD% 1\n
+??RD! 2\n
+```
+
+Where the first line indicated the first period and the second line the second period.
+
+#### Flow diagram
+The next step is setting up a Python script so we can read the data coming from the PIC16F873 and extract the useful data from it. 
 
 ---
 
