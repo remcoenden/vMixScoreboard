@@ -13,12 +13,12 @@ import time
 
 
 #####################################################################
-# IP-Addres
+# IP-Address
 #####################################################################
 IP_ADDRES = "10.15.52.253:8088"
 
 #####################################################################
-# Title name defintions
+# Title name definitions
 #####################################################################
 SCOREBOARD_ID = "2f7cf9d9-d81d-404e-a67a-18268bb38d12"
 SCOREBORAD_HOME_NAME = "HomeName.Text"
@@ -73,7 +73,7 @@ def main():
     oldGuestScore = 0
     
     # Test if API connection is possible
-    # If not, keep tring
+    # If not, keep trying
     checkForConenction(IP_ADDRES)
     
     while(True):        
@@ -88,7 +88,7 @@ def main():
         # If not, check again for 10 times over a whole second
         # If still no changes, colour the seconds, minutes and semicolon red.
         if(oldSeconds == currentSeconds):
-            attempt += 1;
+            attempt += 1
         else:
             setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SECONDS, currentSeconds)
             setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_MINUTES, currentMinutes)
@@ -96,7 +96,7 @@ def main():
             setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_MINUTES, ACTIVE)
             setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SPACER, ACTIVE)
             oldSeconds = currentSeconds
-            attempt = 0;
+            attempt = 0
             
         if(attempt > 10):
             setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SECONDS, INACTIVE)
