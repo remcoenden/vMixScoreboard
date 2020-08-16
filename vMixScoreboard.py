@@ -8,6 +8,7 @@
 #####################################################################
 # Imports
 #####################################################################
+import gpiozero
 import urllib.request
 import time
 
@@ -15,12 +16,12 @@ import time
 #####################################################################
 # IP-Address
 #####################################################################
-IP_ADDRES = "10.15.52.253:8088"
+IP_ADDRES = "192.168.2.13:8088"
 
 #####################################################################
 # Title name definitions
 #####################################################################
-SCOREBOARD_ID = "f1446fc4-ec48-47fb-bfaa-c04a272ef775"
+SCOREBOARD_ID = "825a2846-6a60-4b07-9ffb-990e3272ad4f"
 SCOREBORAD_HOME_NAME = "HomeName.Text"
 SCOREBOARD_GUEST_NAME = "GuestName.Text"
 
@@ -32,9 +33,18 @@ SCOREBOARD_TIME_MINUTES = "TimeMinutes.Text"
 SCOREBOARD_TIME_SPACER = "Time_spacer.Text"
 
 #####################################################################
-# Global variables
+# Pin definitions
 #####################################################################
-TIME_OUT = 3 #in seconds
+dataInputPin = 4    # GPIO4  = Pin  7
+strobeInputPin = 5  # GPIO5  = Pin 29
+clockD1Pin = 6      # GPIO6  = Pin 31
+clockD2Pin = 12     # GPIO12 = Pin 32
+clockD3Pin = 13     # GPIO13 = Pin 33
+clockD4Pin = 17     # GPIO17 = Pin 11
+clockD5Pin = 18     # GPIO18 = Pin 12
+clockD6Pin = 22     # GPIO22 = Pin 15
+clockD7Pin = 23     # GPIO23 = Pin 16
+clockD8Pin = 24     # GPIO24 = Pin 18
 
 #####################################################################
 # HTML Colours
@@ -42,6 +52,28 @@ TIME_OUT = 3 #in seconds
 INACTIVE = "red"
 ACTIVE = "white"
 
+#####################################################################
+# Global variables
+#####################################################################
+TIME_OUT = 3 #in seconds
+
+dataDigit1 = ""
+dataDigit2 = ""
+dataDigit3 = ""
+dataDigit4 = ""
+dataDigit5 = ""
+dataDigit6 = ""
+dataDigit7 = ""
+dataDigit8 = ""
+
+digit1 = -1
+digit2 = -1
+digit3 = -1
+digit4 = -1
+digit5 = -1
+digit6 = -1
+digit7 = -1
+digit8 = -1
 
 #####################################################################
 # API Functions
@@ -53,14 +85,87 @@ def checkForConenction(ip):
             urllib.request.urlopen(req)
             return
         except urllib.error.URLError:
-             print('Connection has failed. Will try again in ' + str(TIME_OUT) + ' seconds.')
-             time.sleep(TIME_OUT)
+            print('Connection has failed. Will try again in ' + str(TIME_OUT) + ' seconds.')
+            time.sleep(TIME_OUT)
 
 def setText(ip, id, name, value):
     urllib.request.urlopen('http://' + str(ip) + '/API/?Function=SetText&Input=' + str(id) + '&SelectedName=' + str(name) + '&Value=' + str(value))
 
 def setTextColour(ip, id, name, value):
     urllib.request.urlopen('http://' + str(ip) + '/API/?Function=SetTextColour&Input=' + str(id) + '&SelectedName=' + str(name) + '&Value=' + str(value))
+    
+#####################################################################
+# Input device functions
+#####################################################################    
+def dataToDigit(digitData):
+    if len(digitData) == 8:
+        if digitData == "00110000":
+            return int(1)
+        elif digitData == "01101110":
+            return int(2)
+        elif digitData == "01111010":
+            return int(3)
+        elif digitData == "10111000":
+            return int(4)
+        elif digitData == "11011010":
+            return int(5)
+        elif digitData == "11011110":
+            return int(6)
+        elif digitData == "01110000":
+            return int(7)
+        elif digitData == "11111110":
+            return int(8)
+        elif digitData == "11111010":
+            return int(9)
+        elif digitData == "11110110":
+            return int(0)
+        elif digitData == "00000000":
+            return int(-1)
+        else:
+            return
+    else:
+        return
+    
+def mergeNumbers(first, second):
+    if first == -1 and second == -1:
+        return 0
+    elif first == -1:
+        return second
+    elif second == -1:
+        return first
+    else:
+        return (first * 10) + second
+    
+
+def newData(clockGpioNumber):
+    newValue = str(dataInput.value)
+    
+    if clockGpioNumber.pin.number == clockD1Pin:
+        global dataDigit1
+        dataDigit1 = newValue + dataDigit1
+        print(dataDigit1)
+
+def strobe():
+    global digit1; global dataDigit1
+    
+    temp = dataToDigit(dataDigit1)
+    if isinstance(temp, int):
+        digit1 = temp
+    dataDigit1 = ""
+    print(digit1)
+    
+    
+#####################################################################
+# Setup input devices
+#####################################################################
+## Init data pins with gpiozero libray
+dataInput = gpiozero.DigitalInputDevice(dataInputPin, pull_up = None, active_state = True)
+strobeInput = gpiozero.DigitalInputDevice(strobeInputPin, pull_up = None, active_state = True)
+clockD1 = gpiozero.DigitalInputDevice(clockD1Pin, pull_up = None, active_state = True)
+
+## Setup function to execute
+clockD1.when_activated = newData
+strobeInput.when_activated = strobe
     
 #####################################################################
 # Main
@@ -105,7 +210,7 @@ def main():
         
         # Check if there is an update in the home score
         # If so, push updated score to vMix
-        homeScore = 1    # Change for data from the scoreboard
+        homeScore = mergeNumbers(digit1, digit2)    # Change for data from the scoreboard
         if(oldHomeScore != homeScore):
             setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_SCORE_HOME, homeScore)
             oldHomeScore = homeScore
