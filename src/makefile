@@ -1,11 +1,16 @@
 # vMixScoreboard makefile
 # Author: Remco van den Enden
 
-CC=gcc				# compiler
-TARGET=vMixScoreboard.exe	# target file name
+SOURCES = vMixScoreboard.c
+OBJECTS = $(SOURCES:%.c=%.o)
 
-all: vMixScoreboard.o
-	$ (CC) vMixScoreboard.c -Wall -O3 -o -lwiringPi
+TARGET = vMixScoreboard.exe
+
+$(TARGET): $(OBJECTS)
+	gcc $^ -Wall -O3 -o $@ -lwiringPi -pthread
+
+%.o: %.c
+	gcc -c -Wall -O3 $< -o $@ -lwiringPi -pthread
 
 clean:
-	rm *.o $ (TARGET)
+	rm *.o $(TARGET)
