@@ -171,11 +171,11 @@ strobeInput.when_activated = strobe
 # Main
 #####################################################################
 def main():
-    oldSeconds = 0
+    oldSeconds = -1
     attempt = 0
     
-    oldHomeScore = 0
-    oldGuestScore = 0
+    oldHomeScore = -1
+    oldGuestScore = -1
     
     # Test if API connection is possible
     # If not, keep trying
@@ -217,7 +217,7 @@ def main():
         
         # Check if there is an update in the guest score
         # If so, push updated score to vMix
-        guestScore = 1    # Change for data from the scoreboard
+        guestScore = mergeNumbers(digit7, digit8)    # Change for data from the scoreboard
         if(oldGuestScore != guestScore):
             setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_SCORE_GUEST, guestScore)
         
