@@ -57,6 +57,7 @@ void pushData(bool value, int clockPin) {
 			digitalWrite(clockPin, HIGH);	// High pulse on the clock
 			delayMicroseconds(2);			// Wait
 			digitalWrite(clockPin, LOW);	// Make clock low
+			delayMicroseconds(2);			// Wait
 			break;
 		case false:
 			digitalWrite(dataPin, LOW);		// Make data pin low
@@ -153,8 +154,11 @@ int main(void) {
 	printf("Start the program!\r\n");
 	setupWiringPi();
 	
-	pushNumber(8, clockD1Pin);
-	pushStrobe();
+	for(int i = 0; i < 2; i++) {
+		pushNumber(8, clockD1Pin);
+		pushStrobe();
+		delay(1);
+	}
 	
 	return 0;
 }
