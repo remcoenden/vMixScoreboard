@@ -64,6 +64,7 @@ void pushData(bool value, int clockPin) {
 			digitalWrite(clockPin, HIGH);	// High pulse on the clock
 			delayMicroseconds(2);			// Wait
 			digitalWrite(clockPin, LOW);	// Make clock low
+			delayMicroseconds(2);			// Wait
 	}
 }
 
@@ -76,7 +77,7 @@ void pushStrobe(void) {
 
 void pushNumber(int value, int clockPin) {
 	// Check is value is in range
-	if( (value < 0) || (value > 9) ) {
+	if( (value < -1) || (value > 9) ) {
 		printf("Value is out of range!\r\n");
 		return;
 	}
@@ -91,6 +92,7 @@ void pushNumber(int value, int clockPin) {
 	const int dataValue7[8] = {0, 1, 1, 1, 0, 0, 0, 0};
 	const int dataValue8[8] = {1, 1, 1, 1, 1, 1, 1, 0};
 	const int dataValue9[8] = {1, 1, 1, 1, 1, 0, 1, 0};
+	const int dataValueNaN[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 	
 	switch(value) {
 		case 0:
@@ -143,6 +145,11 @@ void pushNumber(int value, int clockPin) {
 				pushData(dataValue9[i], clockPin);
 			}
 			break;
+		case -1:
+			for(int i = 0; i < 8; i++) {
+				pushData(dataValueNaN[i], clockPin);
+			}
+			break;
 	}
 }
 
@@ -155,7 +162,14 @@ int main(void) {
 	setupWiringPi();
 	
 	for(int i = 0; i < 2; i++) {
-		pushNumber(8, clockD1Pin);
+		pushNumber(1, clockD1Pin);
+		pushNumber(-1, clockD2Pin);
+		pushNumber(3, clockD3Pin);
+		pushNumber(4, clockD4Pin);
+		pushNumber(5, clockD5Pin);
+		pushNumber(6, clockD6Pin);
+		pushNumber(7, clockD7Pin);
+		pushNumber(8, clockD8Pin);
 		pushStrobe();
 		delay(1);
 	}
