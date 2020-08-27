@@ -20,12 +20,12 @@ ser = serial.Serial ("/dev/ttyS0", 9600)
 #####################################################################
 # IP-Address
 #####################################################################
-IP_ADDRES = "192.168.2.13:8088"
+IP_ADDRES = "10.12.0.6:8088"
 
 #####################################################################
 # Title name definitions
 #####################################################################
-SCOREBOARD_ID = "825a2846-6a60-4b07-9ffb-990e3272ad4f"
+SCOREBOARD_ID = "564f4ef3-1a9e-46fb-a831-955a00061337"
 SCOREBORAD_HOME_NAME = "HomeName.Text"
 SCOREBOARD_GUEST_NAME = "GuestName.Text"
 
@@ -81,71 +81,96 @@ def setTextColour(ip, id, name, value):
 
     
 def mergeNumbers(first, second):
+    try:
+        first = int(first)
+        second = int(second)
+    except:
+        return -1
+        
     if first == -1 and second == -1:
-        return 0
+        return "0"
+    elif first == 0 and second == 0:
+        return "00"
+    elif first == 0 and second > 0:
+        return "0" + str(second)
     elif first == -1:
-        return second
+        return str(second)
     elif second == -1:
-        return first
+        return str(first)
     else:
-        return (first * 10) + second    
+        return str( (first * 10) + second )    
     
 #####################################################################
 # Main
 #####################################################################
 def main():
     oldSeconds = -1
-    attempt = 0
-    
+    oldMinutes = -1    
     oldHomeScore = -1
     oldGuestScore = -1
     
+    attempt = 0
+    makeActiveColour = True
+    
     # Test if API connection is possible
     # If not, keep trying
-#     checkForConenction(IP_ADDRES)
-    
-    while(True):        
-        received_data = ser.readline()
-        received_data.decode()
-        received_data = str(received_data[:-1])
-        print(received_data)
-        split_data = received_data.split('.')
-        print(split_data[0])
+    checkForConenction(IP_ADDRES)
+    digits = [0, 0, 0, 0, 0, 0, 0, 0]
+    while(True):
+        lengthReceivedData = 0
+        while(lengthReceivedData != 8):
+            received_data = ser.readline()
+            decoded_data = str(received_data[0:len(received_data)-1].decode("utf-8"))
+            digits = decoded_data.split('.')
+            lengthReceivedData = len(digits)
         
-#         # Check is there is an update in the seconds
-#         # If so, push updated seconds and minutes to vMix
-#         # If not, check again for 10 times over a whole second
-#         # If still no changes, colour the seconds, minutes and semicolon red.
-#         if(oldSeconds == currentSeconds):
-#             attempt += 1
-#         else:
-#             setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SECONDS, currentSeconds)
-#             setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_MINUTES, currentMinutes)
-#             setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SECONDS, ACTIVE)
-#             setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_MINUTES, ACTIVE)
-#             setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SPACER, ACTIVE)
-#             oldSeconds = currentSeconds
-#             attempt = 0
-#             
-#         if(attempt > 10):
-#             setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SECONDS, INACTIVE)
-#             setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_MINUTES, INACTIVE)
-#             setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SPACER, INACTIVE)
-#         
-#         # Check if there is an update in the home score
-#         # If so, push updated score to vMix
-#         homeScore = mergeNumbers(digit1, digit2)    # Change for data from the scoreboard
-#         if(oldHomeScore != homeScore):
-#             setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_SCORE_HOME, homeScore)
-#             oldHomeScore = homeScore
-#         
-#         # Check if there is an update in the guest score
-#         # If so, push updated score to vMix
-#         guestScore = mergeNumbers(digit7, digit8)    # Change for data from the scoreboard
-#         if(oldGuestScore != guestScore):
-#             setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_SCORE_GUEST, guestScore)
+        
+#         print(mergeNumbers(digits[0], digits[1]) + "   " + mergeNumbers(digits[2], digits[3]) + ":" + mergeNumbers(digits[4], digits[5]) + "   " + mergeNumbers(digits[6], digits[7]))
+        
+        # Check is there is an update in the seconds
+        # If so, push updated seconds and minutes to vMix
+        # If not, check again for 10 times over a whole second
+        # If still no changes, colour the seconds, minutes and semicolon red.
+        currentSeconds = mergeNumbers(digits[4], digits[5])
+        if((oldSeconds == currentSeconds) & (oldSeconds != -1)):
+            attempt += 1
+        else:
+            setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SECONDS, currentSeconds)
+            
+            if(makeActiveColour):
+                setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SECONDS, ACTIVE)
+                setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_MINUTES, ACTIVE)
+                setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SPACER, ACTIVE)
+                makeActiveColour = False;
+            oldSeconds = currentSeconds
+            attempt = 0
+        
+        currentMinutes = mergeNumbers(digits[2], digits[3])
+        if((oldMinutes != currentMinutes) & (currentMinutes != -1)):
+            setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_MINUTES, currentMinutes)
+            oldMinuts = currentMinutes
+        
+        if(attempt > 10):
+            setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SECONDS, INACTIVE)
+            setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_MINUTES, INACTIVE)
+            setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SPACER, INACTIVE)
+            makeActiveColour = True
+        
+        # Check if there is an update in the home score
+        # If so, push updated score to vMix
+        homeScore = mergeNumbers(digits[0], digits[1])
+        if((oldHomeScore != homeScore) & (homeScore != -1)):
+            setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_SCORE_HOME, homeScore)
+            oldHomeScore = homeScore
+        
+        # Check if there is an update in the guest score
+        # If so, push updated score to vMix
+        guestScore = mergeNumbers(digits[6], digits[7])
+        if((oldGuestScore != guestScore) & (guestScore != -1)):
+            setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_SCORE_GUEST, guestScore)
         
         time.sleep(0.1)
+        ser.reset_input_buffer()
         
         
 #####################################################################
