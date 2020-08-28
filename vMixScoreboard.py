@@ -39,6 +39,8 @@ SCOREBOARD_TIME_SPACER = "Time_spacer.Text"
 MATCH_INFO_ID = "337ed5cf-ef82-4c56-825b-dcaee536e330"
 MATCH_INFO_SECONDS = "Seconds.Text"
 MATCH_INFO_MINUTES = "Minutes.Text"
+MATCH_INFO_SCORE_HOME = "HomeScore.Text"
+MATCH_INFO_SCORE_GUEST = "AwayScore.Text"
 
 #####################################################################
 # HTML Colours
@@ -154,7 +156,7 @@ def main():
         currentMinutes = mergeNumbers(digits[2], digits[3])
         if((oldMinutes != currentMinutes) & (currentMinutes != -1)):
             setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_MINUTES, currentMinutes)
-            setText(IP_ADDRES, MATCH_INFO_ID, MATCH_INFO_MINUTES, currentSeconds)
+            setText(IP_ADDRES, MATCH_INFO_ID, MATCH_INFO_MINUTES, currentMinutes)
             oldMinuts = currentMinutes
         
         if(attempt > 10):
@@ -168,6 +170,7 @@ def main():
         homeScore = mergeNumbers(digits[0], digits[1])
         if((oldHomeScore != homeScore) & (homeScore != -1)):
             setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_SCORE_HOME, homeScore)
+            setText(IP_ADDRES, MATCH_INFO_ID, MATCH_INFO_SCORE_HOME, homeScore)
             oldHomeScore = homeScore
         
         # Check if there is an update in the guest score
@@ -175,6 +178,7 @@ def main():
         guestScore = mergeNumbers(digits[6], digits[7])
         if((oldGuestScore != guestScore) & (guestScore != -1)):
             setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_SCORE_GUEST, guestScore)
+            setText(IP_ADDRES, MATCH_INFO_ID, MATCH_INFO_SCORE_GUEST, guestScore)
         
         time.sleep(0.1)
         ser.reset_input_buffer()
