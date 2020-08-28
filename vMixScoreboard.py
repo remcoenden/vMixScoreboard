@@ -36,6 +36,10 @@ SCOREBOARD_TIME_SECONDS = "TimeSeconds.Text"
 SCOREBOARD_TIME_MINUTES = "TimeMinutes.Text"
 SCOREBOARD_TIME_SPACER = "Time_spacer.Text"
 
+MATCH_INFO_ID = "337ed5cf-ef82-4c56-825b-dcaee536e330"
+MATCH_INFO_SECONDS = "Seconds.Text"
+MATCH_INFO_MINUTES = "Minutes.Text"
+
 #####################################################################
 # HTML Colours
 #####################################################################
@@ -136,6 +140,8 @@ def main():
             attempt += 1
         else:
             setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SECONDS, currentSeconds)
+            setText(IP_ADDRES, MATCH_INFO_ID, MATCH_INFO_SECONDS, currentSeconds)
+
             
             if(makeActiveColour):
                 setTextColour(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_SECONDS, ACTIVE)
@@ -148,6 +154,7 @@ def main():
         currentMinutes = mergeNumbers(digits[2], digits[3])
         if((oldMinutes != currentMinutes) & (currentMinutes != -1)):
             setText(IP_ADDRES, SCOREBOARD_ID, SCOREBOARD_TIME_MINUTES, currentMinutes)
+            setText(IP_ADDRES, MATCH_INFO_ID, MATCH_INFO_MINUTES, currentSeconds)
             oldMinuts = currentMinutes
         
         if(attempt > 10):
