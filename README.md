@@ -26,14 +26,25 @@ The software for vMixScoreboard is relatively easy. The main program consists of
 
 To get a feeling for the signal we are working with I created the pictures below. The software simply reads the data and finds out with the corrosponding value is with a simple state machine. Once this value is found it is pushed to the Raspberry Pi. There I check for differences between the current data en new data. Only when these are different the new data gets pushed to vMix. This way the API doesn't have to send more data than needed.
 
+![image info](/figures/anatec_scoreboard_timing.png)
+
+![image info](/figures/anatec_scoreboard_digit_data.png)
+
+Based on the two pictures above the code has been written. As you can see data is placed in a sertain digit based on the used clock.
+
 ## vMix API
 This project uses the vMix API to interface the Raspberry Pi with vMix. More information about this API can be found [here](https://www.vmix.com/help19/index.htm?DeveloperAPI.html)
+
+## Future development
+As stated before, I wish to completly removed the Raspberry Pi from the scope, because I thing that I don't need it anymore. For this to happen I have to add an ehternet module to interface with the STM32 Blue Pill. I'll also make a new PCB to place everything in the scoreboard neatly.
+Furthermore I want to rewrite the complete program for the Blue Pill. Right now it's a complete mess because of the tight deadline. Once I've got some spare time I'll rewrite the code with proper classes where needed.
+
+If you have ant more sugestions feel free to contact me!
 
 ## Credits
 This project would not be possible if it wasn't for the help, information and inspiration from the following people:
 - [Jan Jaap Elenbaas](https://www.linkedin.com/in/jjelenbaas/)
-- Rick Voskamp
-- [André Kager](https://www.linkedin.com/in/andrekager/)
+- [Rick Voskamp](https://github.com/rickvoskamp)
 
 ## License
 Boost Software License 1.0 © [Remco van den Enden](https://github.com/remcoenden)
