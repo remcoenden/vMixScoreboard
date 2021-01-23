@@ -10,6 +10,8 @@
  * INCLUDES
  ***********************************************/
 #include <mbed.h>
+#include "EthernetInterface.h"
+// #include <Websocket.h>
 
 
 /************************************************
