@@ -23,6 +23,10 @@ ScoreboardDigit::ScoreboardDigit(uint8_t digitData, uint8_t digitClock) :
     pinMode(_digitClock, INPUT);
 }
 
+ScoreboardDigit::~ScoreboardDigit() {
+    //TODO Write proper destructor
+}
+
 
 /**********************************************************************
  * PUBLIC METHODS
