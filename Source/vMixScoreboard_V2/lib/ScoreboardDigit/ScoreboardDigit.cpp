@@ -1,9 +1,10 @@
 /************************************************
  * vMixScoreboard V2
- * Author:  Remco van den Enden
- * Data:    June 27, 2021
- ***********************************************/
-
+ *
+ * Created by: Remco van den Enden
+ * Last edited by: Remco van den Enden
+ * Last edited on: Tue Jun 29 2021
+************************************************/
 
 
 /**********************************************************************
