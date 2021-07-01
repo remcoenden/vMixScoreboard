@@ -17,6 +17,8 @@
  ***********************************************/
 #include <Arduino.h>
 
+#include <stdarg.h>
+
 /***********************************************
  * SETUP
  ***********************************************/
@@ -26,56 +28,67 @@ void initiateSerialDebug() {
     Serial.begin(9600);
 }
 
+/***********************************************
+ * CONTROL
+ ***********************************************/
+void printToMonitor(const char* debugGroup_, const char* str_, size_t size_, ...) {
+    /* Retreive all the extra arugments
+     * https://stackoverflow.com/a/4339447/10546380
+     */
+    va_list args;
+    va_start(args, size_);
+
+    char _buffer[size_ + 10] = {'\0'};
+
+    sprintf( _buffer, "[%-4s] %s\n", debugGroup_, str_ );
+    vprintf( _buffer, args );
+
+    va_end(args);
+}
+
 /************************************************
  * BASIC DEBUG OUTPUT
  ***********************************************/
 /* Set to true for debug output, false for no debug output */
-#define DEBUG_BASIC true
+#define USE_DEBUG_BASIC true
 
-/* Create debug messages like: DEBUG_SERIAL.println("Some debug output"); */
-#define DEBUG_BASIC_SERIAL \
-    if (DEBUG_BASIC) Serial
-
-void DEBUG(const char* str) {
-    DEBUG_BASIC_SERIAL.println((String)"[DBG ] " + str);
-}
+/* Create debug messages like: DEBUG("Some debug output"); */
+#if USE_DEBUG_BASIC
+#define DEBUG(str_, ...) \
+    printToMonitor("DBG", (str_), sizeof(str_) / sizeof(str_[0]), ##__VA_ARGS__);
+#endif
 
 
 /************************************************
  * ERROR DEBUG OUTPUT
  ***********************************************/
-#define DEBUG_ERROR true
+#define USE_DEBUG_ERROR true
 
-#define DEBUG_ERROR_SERIAL \
-    if (DEBUG_ERROR) Serial
-
-void DEBUG_ERR(const char* str) {
-    DEBUG_ERROR_SERIAL.println((String)"[ERR ] " + str);
-}
+/* Create debug messages like: DEBUG_ERROR("Some debug output"); */
+#if USE_DEBUG_ERROR
+#define DEBUG_ERROR(str_, ...) \
+    printToMonitor("ERR", (str_), sizeof(str_) / sizeof(str_[0]), ##__VA_ARGS__);
+#endif
 
 
 /************************************************
  * WARNING DEBUG OUTPUT
  ***********************************************/
-#define DEBUG_WARNING true
+#define USE_DEBUG_WARNING true
 
-#define DEBUG_WARNING_SERIAL \
-    if (DEBUG_WARNING) Serial
-
-void DEBUG_WARN(const char* str) {
-    DEBUG_ERROR_SERIAL.println((String)"[WARN] " + str);
-}
+#if USE_DEBUG_WARNING
+#define DEBUG_WARNING(str_, ...) \
+    printToMonitor("WARN", (str_), sizeof(str_) / sizeof(str_[0]), ##__VA_ARGS__);
+#endif
 
 /************************************************
  * INTO DEBUG OUTPUT
  ***********************************************/
-#define DEBUG_INFO true
+#define USE_DEBUG_INFO true
 
-#define DEBUG_INFO_SERIAL \
-    if (DEBUG_INFO) Serial
-
-void DEBUG_INF(const char* str) {
-    DEBUG_ERROR_SERIAL.println((String)"[INFO] " + str);
-}
+#if USE_DEBUG_INFO
+#define DEBUG_INFO(str_, ...) \
+    printToMonitor("INFO", (str_), sizeof(str_) / sizeof(str_[0]), ##__VA_ARGS__);
+#endif
 
 #endif /* DEBUG_CONTROL */
