@@ -9,10 +9,24 @@
 # Imports
 #####################################################################
 import sys, getopt
-import urllib.request
-import time
 import serial
-   
+
+from vMixIntegration import vMixIntegration
+
+#####################################################################
+# Global variables
+#####################################################################
+acceptedManufacturers = ["DataDisplay"]
+
+
+#####################################################################
+# Functions
+#####################################################################
+def validateManufacturer(manufacturer):
+    if not manufacturer in acceptedManufacturers:
+        raise Exception ("This manufacturer isn't supported right now" )
+    
+
     
 #####################################################################
 # Main
@@ -21,14 +35,21 @@ def main(argv):
     scoreboardManufacturer = ''
     configJSON = ''
     com = ''
+    
+    # Make sure the needed command line parameters are present
+    # If these are not present, the program is unable to function and an exception is thrown
     try:
         opts, args = getopt.getopt(argv, "hm:j:c:", ["help", "manufacturer=", "config=", "com="])
-    except getopt.GetoptError:
-        print("vMixScoreboard.py -m <Anatec / DataDisplay> -j <vMixConfig.JSON> -c <COM port>")
+        if not len(argv) > 1:
+            raise Exception
+    except:
+        print("vMixScoreboard.py -m <", *acceptedManufacturers,  "> -j < vMixConfig.JSON > -c < COM port >")
         sys.exit(2)
+        
+    # Map the command line parameters to the appropriate local variable
     for opt, arg in opts:
         if opt in ("-h", "--help"):
-            print("vMixScoreboard.py -m <Anatec / DataDisplay> -j <vMixConfig.JSON> -c <COM port>")
+            print("vMixScoreboard.py -m <", *acceptedManufacturers,"> -j < vMixConfig.JSON > -c < COM port >")
             sys.exit()
         elif opt in ("-m", "--manufacturer"):
             scoreboardManufacturer = arg
@@ -36,6 +57,16 @@ def main(argv):
             configJSON = arg
         elif opt in ("-c", "--com"):
             com = arg
+    
+    # Check if the command line arguments are valid
+    # The program is unable to function with incorrect parameters and an exception is thrown
+    try:
+        validateManufacturer(scoreboardManufacturer)
+    except Exception as e:
+        print(e)
+        sys.exit(2)
+    
+    
     print("Scoreboard manufacturer is: ", scoreboardManufacturer)
     print("JSON config file is: ", configJSON)
     print("The seleted com port is: ", com)
