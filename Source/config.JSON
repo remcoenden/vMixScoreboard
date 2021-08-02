@@ -1,0 +1,16 @@
+{
+    "ip_adres":"10.12.0.60:8088",
+    "scoreboard_id":"4e64175f-2b61-4edc-92c9-b60a836effc8",
+    "scoreboard_home_name":"HomeName.Text",
+    "scoreboard_guest_name":"GuestName.Text",
+    "scoreboard_score_home":"ScoreHome.Text",
+    "scoreboard_score_guest":"ScoreGuest.Text",
+    "scoreboard_time_seconds":"TimeSeconds.Text",
+    "scoreboard_time_minutes":"TimeMinutes.Text",
+    "scoreboard_time_spacer":"Time_spacter.Text",
+    "match_info_id":"337ed5cf-ef82-4c56-825b-dcaee536e330",
+    "match_info_seconds":"Seconds.Text",
+    "match_info_minutes":"Minutes.Text",
+    "match_info_score_home":"HomeScore.Text",
+    "match_info_score_guest":"AwayScore.Text"
+}

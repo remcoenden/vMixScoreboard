@@ -9,6 +9,7 @@
 #####################################################################
 import urllib.request
 import time
+import json
 
 #####################################################################
 # Class
@@ -16,25 +17,11 @@ import time
 class vMixIntegration:
     __config = ''
     
-    # vMix configuration paramters, comming from the JSON config file
-    __ip_addres = ''
-    
-    __scoreboard_id = ''
-    __scoreboard_home_name    = ''
-    __scoreboard_score_home   = ''
-    __scoreboard_score_guest  = ''
-    __scoreboard_time_seconds = ''
-    __scoreboard_time_minutes = ''
-    __scoreboard_time_spacer  = ''
-    
-    __match_info_id          = ''
-    __match_info_seconds     = ''
-    __match_info_minutes     = ''
-    __match_info_score_home  = ''
-    __match_info_score_guest = ''
-    
     def __init__(self, configJSON):
-        config = configJSON
+        with open(configJSON) as f:
+            __config = json.load(f)
+        #print(json.dumps(__config, indent = 4, sort_keys=True))
+        
         
     def checkForConnection(self, ip):
         req = urllib.request.Request('http://' + str(ip) + '/API')
@@ -53,17 +40,17 @@ class vMixIntegration:
         urllib.request.urlopen('http://' + str(ip) + '/API/?Function=SetTextColour&Input=' + str(id) + '&SelectedName=' + str(name) + '&Value=' + str(value))
         
     def updateSecond(self, seconds):
-        self.__setText(__ip_addres, __scoreboard_id, __scoreboard_time_seconds, __seconds)
-        self.__setText(__ip_addres, __match_info_id, __match_info_seconds, __seconds)
+        self.__setText(__config['ip_adres'], __config['scoreboard_id'], __config['scoreboard_time_seconds'], __seconds)
+        self.__setText(__config['ip_adres'], __config['match_info_id'], __config['match_info_seconds'], __seconds)
         
     def updateMinutes(self, minutes):
-        self.__setText(__ip_addres, __scoreboard_id, __scoreboard_time_minutes, __minutes)
-        self.__setText(__ip_addres, __match_info_id, __match_info_minutes, __minutes)
+        self.__setText(__config['ip_adres'], __config['scoreboard_id'], __config['scoreboard_time_minutes'], __minutes)
+        self.__setText(__config['ip_adres'], __config['match_info_id'], __config['match_info_minutes'], __minutes)
         
     def updateScoreHome(self, scoreHome):
-        self.__setText(__ip_addres, __scoreboard_id, __scoreboard_score_home, __scoreHome)
-        self.__setText(__ip_addres, __match_info_id, __match_info_score_home, __scoreHome)
+        self.__setText(__config['ip_adres'], __config['scoreboard_id'], __config['scoreboard_score_home'], __scoreHome)
+        self.__setText(__config['ip_adres'], __config['match_info_id'], __config['match_info_score_home'], __scoreHome)
         
     def updateScoreGuest(self, scoreGuest):
-        self.__setText(__ip_addres, __scoreboard_id, __scoreboard_score_guest, __updateScoreGuest)
-        self.__setText(__ip_addres, __match_info_id, __match_info_score_guest, __updateScoreGuest)
+        self.__setText(__config['ip_adres'], __config['scoreboard_id'], __config['scoreboard_score_guest'], __updateScoreGuest)
+        self.__setText(__config['ip_adres'], __config['match_info_id'], __config['match_info_score_guest'], __updateScoreGuest)

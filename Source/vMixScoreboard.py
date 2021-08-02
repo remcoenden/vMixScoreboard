@@ -18,14 +18,14 @@ from vMixIntegration import vMixIntegration
 #####################################################################
 acceptedManufacturers = ["DataDisplay"]
 
+scoreboard = ''
 
 #####################################################################
 # Functions
 #####################################################################
 def validateManufacturer(manufacturer):
     if not manufacturer in acceptedManufacturers:
-        raise Exception ("This manufacturer isn't supported right now" )
-    
+        raise Exception ("This manufacturer isn't supported right now" )    
 
     
 #####################################################################
@@ -65,6 +65,8 @@ def main(argv):
     except Exception as e:
         print(e)
         sys.exit(2)
+        
+    vMix = vMixIntegration(configJSON)
     
     
     print("Scoreboard manufacturer is: ", scoreboardManufacturer)
