@@ -9,7 +9,6 @@
 # Imports
 #####################################################################
 import sys, getopt
-import serial
 
 from vMixIntegration import vMixIntegration
 
