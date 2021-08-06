@@ -8,17 +8,16 @@
 # Imports
 #####################################################################
 import serial
+import sys
 
 #####################################################################
 # Class
 #####################################################################
 class DataDisplay:
-    self.ser = ''
-    
+        
     def __init__(self, com):
         try:
-            self.ser = serial(port = com, baudrate = 57600)
-            open()
+            self.ser = serial.Serial(port = com, baudrate = 57600)
         except Exception as e:
             print(e)
             sys.exit(2)
@@ -30,14 +29,13 @@ class DataDisplay:
     # The method will read until a '}' is received, indicating
     # the end of a message.
     def readScoreboardData(self):
-        data = ''
         while True:
             rawData = read_until('}')
             # read_until returns byte data, so a conversion to string is needed
             rawData = rawData.decode("utf-8")
             if (rawData[0] == '{') and (rawData[-1:] == '}'):
                 data = rawData
-                break
+                return
             else:
                 rawData = ''
         

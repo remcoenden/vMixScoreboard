@@ -11,6 +11,7 @@
 import sys, getopt
 
 from vMixIntegration import vMixIntegration
+from DataDisplay import DataDisplay
 
 #####################################################################
 # Global variables
@@ -24,7 +25,11 @@ scoreboard = ''
 #####################################################################
 def validateManufacturer(manufacturer):
     if not manufacturer in acceptedManufacturers:
-        raise Exception ("This manufacturer isn't supported right now" )    
+        raise Exception ("This manufacturer isn't supported right now" )
+
+def setupScoreboard(manufacturer, com):
+    if manufacturer == acceptedManufacturers[0]:
+        scoreboard = DataDisplay(com)
 
     
 #####################################################################
@@ -60,17 +65,24 @@ def main(argv):
     # Check if the command line arguments are valid
     # The program is unable to function with incorrect parameters and an exception is thrown
     try:
+        vMix = vMixIntegration(configJSON)
         validateManufacturer(scoreboardManufacturer)
+        setupScoreboard(scoreboardManufacturer, com)
     except Exception as e:
         print(e)
         sys.exit(2)
-        
-    vMix = vMixIntegration(configJSON)
     
     
     print("Scoreboard manufacturer is: ", scoreboardManufacturer)
     print("JSON config file is: ", configJSON)
     print("The seleted com port is: ", com)
+    
+    while True:
+        scoreboard.readScoreboardData()
+        data = scoreboard.getScoreboardData()
+        
+        printFormat = "Time: {0:>2}:{1:<8} Score: {2:>2}-{3:<2}"
+        print(printFormat.format(data.minutes, data.seconds, data.home, data.guest))
                                 
     
 #####################################################################
