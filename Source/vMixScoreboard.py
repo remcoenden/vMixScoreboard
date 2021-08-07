@@ -30,6 +30,7 @@ def validateManufacturer(manufacturer):
 def setupScoreboard(manufacturer, com):
     if manufacturer == acceptedManufacturers[0]:
         scoreboard = DataDisplay(com)
+        return scoreboard
 
     
 #####################################################################
@@ -67,7 +68,7 @@ def main(argv):
     try:
         vMix = vMixIntegration(configJSON)
         validateManufacturer(scoreboardManufacturer)
-        setupScoreboard(scoreboardManufacturer, com)
+        scoreboard = setupScoreboard(scoreboardManufacturer, com)
     except Exception as e:
         print(e)
         sys.exit(2)
@@ -77,12 +78,27 @@ def main(argv):
     print("JSON config file is: ", configJSON)
     print("The seleted com port is: ", com)
     
+    minutesOld = ''
+    secondsOld = ''
+    homeOld = ''
+    guestOld = ''
     while True:
-        scoreboard.readScoreboardData()
-        data = scoreboard.getScoreboardData()
+        dataString = scoreboard.readScoreboardData()
+        data = scoreboard.getScoreboardData(dataString)
         
-        printFormat = "Time: {0:>2}:{1:<8} Score: {2:>2}-{3:<2}"
-        print(printFormat.format(data.minutes, data.seconds, data.home, data.guest))
+        if not ( ( minutesOld == data.get('minutes') ) and \
+                 ( secondsOld == data.get('seconds') ) and \
+                 ( homeOld == data.get('home') ) and \
+                 ( guestOld == data.get('guest') ) ):
+            printFormat = "Time: {0:>2}:{1:<8} Score: {2:>2}-{3:<2}"
+            print(printFormat.format(data.get('minutes'),
+                                     data.get('seconds'),
+                                     data.get('home'),
+                                     data.get('guest') ) )
+            minutesOld = data.get('minutes')
+            secondsOld = data.get('seconds')
+            homeOld = data.get('home')
+            guestOld = data.get('guest')
                                 
     
 #####################################################################
