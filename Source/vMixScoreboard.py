@@ -86,19 +86,27 @@ def main(argv):
         dataString = scoreboard.readScoreboardData()
         data = scoreboard.getScoreboardData(dataString)
         
-        if not ( ( minutesOld == data.get('minutes') ) and \
-                 ( secondsOld == data.get('seconds') ) and \
-                 ( homeOld == data.get('home') ) and \
-                 ( guestOld == data.get('guest') ) ):
-            printFormat = "Time: {0:>2}:{1:<8} Score: {2:>2}-{3:<2}"
-            print(printFormat.format(data.get('minutes'),
+        if not minutesOld == data.get('minutes'):
+            vMix.updateMinutes(data.get('minutes').strip())
+            minutesOld = data.get('minutes')
+            
+        if not secondsOld == data.get('seconds'):
+            vMix.updateSeconds(data.get('seconds').strip())
+            secondsOld = data.get('seconds')
+            
+        if not homeOld == data.get('home'):
+            vMix.updateScoreHome(data.get('home').strip())
+            homeOld = data.get('home')
+            
+        if not guestOld == data.get('guest'):
+            vMix.updateScoreGuest(data.get('guest').strip())
+            guestOld = data.get('guest')
+            
+        printFormat = "Time: {0:>2}:{1:<8} Score: {2:>2}-{3:<2}"
+        print(printFormat.format(data.get('minutes'),
                                      data.get('seconds'),
                                      data.get('home'),
                                      data.get('guest') ) )
-            minutesOld = data.get('minutes')
-            secondsOld = data.get('seconds')
-            homeOld = data.get('home')
-            guestOld = data.get('guest')
                                 
     
 #####################################################################
