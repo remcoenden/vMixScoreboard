@@ -111,12 +111,18 @@ def main(argv):
             
         if update == 1:
             update = 0
+            #https://vstats.app/sbo/?min=JJ&sec=02&hsc=11&asc=12
             url = "https://vstats.app/sbo/?min=" + data.get('minutes').strip() + \
                   "&sec="+ data.get('seconds').strip() + \
                   "&hsc=" + data.get('home').strip() + \
                   "&asc=" + data.get('guest').strip()
-            urllib.request.urlopen(url, timeout=0.1)
-            #https://vstats.app/sbo/?min=JJ&sec=02&hsc=11&asc=12
+            try:
+                urllib.request.urlopen(url, timeout=1)
+            except:
+                # Failed to push to vStats
+                # Keep update = 1 to make sure we try again on the next loop
+                update = 1
+            
             #update naar server API   data.get('seconds').strip() data.get('home').strip() data.get('guest').strip()
             printFormat = "Time: {0:>2}:{1:<8} Score: {2:>2}-{3:<2}"
             print(printFormat.format(data.get('minutes'),
