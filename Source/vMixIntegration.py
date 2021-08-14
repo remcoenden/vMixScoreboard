@@ -25,18 +25,23 @@ class vMixIntegration:
         
     def checkForConnection(self, ip):
         req = urllib.request.Request('http://' + str(ip) + '/API')
-        while True:
-            try:
-                urllib.request.urlopen(req)
-                return
-            except urllib.error.URLError:
-                print('Connection has failed. Will try again')
-                time.sleep(5)
+        try:
+            urllib.request.urlopen(req, timeout=0.1)
+            # print("Valid connection")
+            return true
+        except urllib.error.URLError:
+            # print('Connection has failed. Will try again')
+            return false
                 
     def __setText(self, ip, id, name, value):
         try:
 #             print('http://' + str(ip) + '/API/?Function=SetText&Input=' + str(id) + '&SelectedName=' + str(name) + '&Value=' + str(value))
-            urllib.request.urlopen('http://' + str(ip) + '/API/?Function=SetText&Input=' + str(id) + '&SelectedName=' + str(name) + '&Value=' + str(value))
+            # connection = self.checkForConnection(ip)
+            # print("Valid connection: " + connection)
+            # if connection:
+            url = 'http://' + str(ip) + '/API/?Function=SetText&Input=' + str(id) + '&SelectedName=' + str(name) + '&Value=' + str(value)
+            urllib.request.urlopen(url, timeout=0.1)
+            # print('http://' + str(ip) + '/API/?Function=SetText&Input=' + str(id) + '&SelectedName=' + str(name) + '&Value=' + str(value))
         except:
             return
         

@@ -10,5 +10,6 @@
     "match_info_seconds":"timeSeconds.Text",
     "match_info_minutes":"timeMinutes.Text",
     "match_info_score_home":"scoreHome.Text",
-    "match_info_score_guest":"scoreAway.Text"
+    "match_info_score_guest":"scoreAway.Text",
+    "url":"https://vstats.app/sbo"
 }

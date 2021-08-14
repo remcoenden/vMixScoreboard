@@ -9,6 +9,7 @@
 # Imports
 #####################################################################
 import sys, getopt
+import urllib.request
 
 from vMixIntegration import vMixIntegration
 from DataDisplay import DataDisplay
@@ -82,6 +83,8 @@ def main(argv):
     secondsOld = ''
     homeOld = ''
     guestOld = ''
+    update = 0
+    
     while True:
         dataString = scoreboard.readScoreboardData()
         data = scoreboard.getScoreboardData(dataString)
@@ -89,21 +92,34 @@ def main(argv):
         if not minutesOld == data.get('minutes'):
             vMix.updateMinutes(data.get('minutes').strip())
             minutesOld = data.get('minutes')
+            update = 1
             
         if not secondsOld == data.get('seconds'):
             vMix.updateSeconds(data.get('seconds').strip())
             secondsOld = data.get('seconds')
+            update = 1
             
         if not homeOld == data.get('home'):
             vMix.updateScoreHome(data.get('home').strip())
             homeOld = data.get('home')
+            update = 1
             
         if not guestOld == data.get('guest'):
             vMix.updateScoreGuest(data.get('guest').strip())
             guestOld = data.get('guest')
+            update = 1
             
-        printFormat = "Time: {0:>2}:{1:<8} Score: {2:>2}-{3:<2}"
-        print(printFormat.format(data.get('minutes'),
+        if update == 1:
+            update = 0
+            url = "https://vstats.app/sbo/?min=" + data.get('minutes').strip() + \
+                  "&sec="+ data.get('seconds').strip() + \
+                  "&hsc=" + data.get('home').strip() + \
+                  "&asc=" + data.get('guest').strip()
+            urllib.request.urlopen(url, timeout=0.1)
+            #https://vstats.app/sbo/?min=JJ&sec=02&hsc=11&asc=12
+            #update naar server API   data.get('seconds').strip() data.get('home').strip() data.get('guest').strip()
+            printFormat = "Time: {0:>2}:{1:<8} Score: {2:>2}-{3:<2}"
+            print(printFormat.format(data.get('minutes'),
                                      data.get('seconds'),
                                      data.get('home'),
                                      data.get('guest') ) )
