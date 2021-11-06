@@ -8,16 +8,17 @@
 #####################################################################
 # Imports
 #####################################################################
-import sys, getopt
+import sys, getopt, time
 import urllib.request
 
 from vMixIntegration import vMixIntegration
 from DataDisplay import DataDisplay
+from AnatecIndor import AnatecIndor
 
 #####################################################################
 # Global variables
 #####################################################################
-acceptedManufacturers = ["DataDisplay"]
+acceptedManufacturers = ["DataDisplay", "AnatecIndor"]
 
 scoreboard = ''
 
@@ -31,6 +32,9 @@ def validateManufacturer(manufacturer):
 def setupScoreboard(manufacturer, com):
     if manufacturer == acceptedManufacturers[0]:
         scoreboard = DataDisplay(com)
+        return scoreboard
+    elif manufacturer == acceptedManufacturers[1]:
+        scoreboard = AnatecIndor(com)
         return scoreboard
 
     
@@ -83,53 +87,35 @@ def main(argv):
     secondsOld = ''
     homeOld = ''
     guestOld = ''
+    shotClockOld = ''
     update = 0
+    
+    vMix.changeTimeColor("White")
     
     while True:
         dataString = scoreboard.readScoreboardData()
         data = scoreboard.getScoreboardData(dataString)
+        print(data.get('minutes') + ":" + data.get('seconds') + "  " + data.get('shotClock') + "    " + data.get('home') + "-" + data.get('guest'))
         
         if not minutesOld == data.get('minutes'):
             vMix.updateMinutes(data.get('minutes').strip())
             minutesOld = data.get('minutes')
-            update = 1
             
         if not secondsOld == data.get('seconds'):
             vMix.updateSeconds(data.get('seconds').strip())
             secondsOld = data.get('seconds')
-            update = 1
             
         if not homeOld == data.get('home'):
             vMix.updateScoreHome(data.get('home').strip())
             homeOld = data.get('home')
-            update = 1
             
         if not guestOld == data.get('guest'):
             vMix.updateScoreGuest(data.get('guest').strip())
             guestOld = data.get('guest')
-            update = 1
             
-        if update == 1:
-            update = 0
-            #https://vstats.app/sbo/?min=JJ&sec=02&hsc=11&asc=12
-            url = "https://vstats.app/sbo/?min=" + data.get('minutes').strip() + \
-                  "&sec="+ data.get('seconds').strip() + \
-                  "&hsc=" + data.get('home').strip() + \
-                  "&asc=" + data.get('guest').strip()
-            try:
-                urllib.request.urlopen(url, timeout=1)
-            except:
-                # Failed to push to vStats
-                # Keep update = 1 to make sure we try again on the next loop
-                update = 1
-            
-            #update naar server API   data.get('seconds').strip() data.get('home').strip() data.get('guest').strip()
-            printFormat = "Time: {0:>2}:{1:<8} Score: {2:>2}-{3:<2}"
-            print(printFormat.format(data.get('minutes'),
-                                     data.get('seconds'),
-                                     data.get('home'),
-                                     data.get('guest') ) )
-                                
+        if not shotClockOld == data.get('shotClock'):
+            vMix.updateShotClock(data.get('shotClock').strip())
+            shotClockOld = data.get('shotClock')
     
 #####################################################################
 # Start program
