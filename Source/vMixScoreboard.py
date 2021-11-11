@@ -114,7 +114,7 @@ def main(argv):
             guestOld = data.get('guest')
             
         if not shotClockOld == data.get('shotClock'):
-            vMix.updateShotClock(data.get('shotClock').strip())
+            vMix.updateShotClock(data.get('shotClock').strip(), "white", "yellow")
             shotClockOld = data.get('shotClock')
     
 #####################################################################
