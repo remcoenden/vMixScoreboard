@@ -12,7 +12,7 @@ import sys, getopt, time
 import urllib.request
 
 from vMixIntegration import vMixIntegration
-from Source.DataDisplay.python.DataDisplay import DataDisplay
+from DataDisplay.python.DataDisplay import DataDisplay
 from Source.AnatecIndor.AnatecIndor import AnatecIndor
 
 #####################################################################
