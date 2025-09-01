@@ -38,7 +38,7 @@ Example:
 ```
 
 ### Field details:
-- `ip_adres`: The IP adress of the target device running vMix. Port `8088` specifies the port on which the vMix API is normally accessable.
+- `ip_adres`: The IP adress of the target device running vMix. Port `8088` specifies the port on which the vMix API is normally accessible.
 - `vmix_id`: The ID of the vMix element (input/title) to update. Obtain this from `http://<ip_adress>:8088/API` (replace with the same IP as ip_adress).
 - `score_home`, `score_guest`, and any additional fields: Set each value to the exact field name in the target title of the specified `vmix_id`.
 
