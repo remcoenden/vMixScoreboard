@@ -13,7 +13,7 @@ import urllib.request
 
 from vMixIntegration import vMixIntegration
 from DataDisplay.python.DataDisplay import DataDisplay
-from Source.AnatecIndor.AnatecIndor import AnatecIndor
+from AnatecIndor.AnatecIndor import AnatecIndor
 
 #####################################################################
 # Global variables
