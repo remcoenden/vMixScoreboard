@@ -42,9 +42,9 @@ The software consists of two responsibilities: reading framed data from the seri
 
 To characterize the signal, the timing diagrams below were captured. The MCU state machine decodes the bitstream into digit values based on the active digit clock and latch transitions. The Raspberry Pi compares new values with the current state and sends updates to vMix only when fields change, minimizing API traffic.
 
-![image info](/figures/anatec_scoreboard_timing.png)
+![image info](./figures/anatec_scoreboard_timing.png)
 
-![image info](/figures/anatec_scoreboard_digit_data.png)
+![image info](./figures/anatec_scoreboard_digit_data.png)
 
 The code maps each digit by its associated clock and reconstructs the display accordingly.
 
