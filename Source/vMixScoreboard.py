@@ -12,8 +12,8 @@ import sys, getopt, time
 import urllib.request
 
 from vMixIntegration import vMixIntegration
-from DataDisplay import DataDisplay
-from AnatecIndor import AnatecIndor
+from Source.DataDisplay.DataDisplay import DataDisplay
+from Source.AnatecIndor.AnatecIndor import AnatecIndor
 
 #####################################################################
 # Global variables
