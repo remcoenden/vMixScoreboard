@@ -1,0 +1,2 @@
+# Requirements for vMixScoreboard Python scripts
+urllib3
